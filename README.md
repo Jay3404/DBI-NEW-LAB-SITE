@@ -1,6 +1,6 @@
 # DBI Lab Website
 
-DBI (Database Intelligence) Lab 공식 웹사이트
+DBI (Data and Business Intelligence) Lab 공식 웹사이트
 
 ## Tech Stack
 
