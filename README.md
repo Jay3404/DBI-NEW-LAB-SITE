@@ -93,7 +93,7 @@ npm run dev
 ```
 
 - **Frontend**: http://localhost:5173
-- **Backend**: http://localhost:5000
+- **Backend**: http://localhost:5001
 - **Admin**: http://localhost:5173/admin
 
 ## Admin System
@@ -119,9 +119,10 @@ npm run dev
 |------|------|
 | Dashboard | 통계 요약, 시스템 상태 |
 | Courses | 강의 CRUD, 이미지 업로드 |
-| Publications | 논문 관리 (예정) |
-| Members | 멤버 관리 (예정) |
-| Projects | 프로젝트 관리 (예정) |
+| Publications | 논문 관리 (SCI/SSCI/KCI, Selected, Work in Progress) |
+| Members | 멤버 관리 (교수/연구원/학생/Alumni) |
+| Projects | 프로젝트 관리 (진행중/완료/예정) |
+| News | 뉴스/공지사항 관리 |
 
 ## API Endpoints
 
@@ -132,6 +133,14 @@ npm run dev
 | GET | `/api/courses` | 강의 목록 (필터 지원) |
 | GET | `/api/courses/grouped` | 대학별 그룹화된 강의 |
 | GET | `/api/courses/:id` | 단일 강의 조회 |
+| GET | `/api/publications` | 논문 목록 (year/category/type 필터) |
+| GET | `/api/publications/:id` | 단일 논문 조회 |
+| GET | `/api/members` | 멤버 목록 (role 필터) |
+| GET | `/api/members/:id` | 단일 멤버 조회 |
+| GET | `/api/projects` | 프로젝트 목록 (status 필터) |
+| GET | `/api/projects/:id` | 단일 프로젝트 조회 |
+| GET | `/api/news` | 뉴스 목록 (limit/urgent 필터) |
+| GET | `/api/news/:id` | 단일 뉴스 조회 |
 | GET | `/api/health` | 서버 상태 확인 |
 
 ### Admin (인증 필요)
@@ -144,7 +153,20 @@ npm run dev
 | POST | `/api/courses` | 강의 추가 |
 | PUT | `/api/courses/:id` | 강의 수정 |
 | DELETE | `/api/courses/:id` | 강의 삭제 |
-| POST | `/api/courses/upload-image` | 이미지 업로드 |
+| POST | `/api/courses/upload-image` | 강의 이미지 업로드 |
+| POST | `/api/publications` | 논문 추가 |
+| PUT | `/api/publications/:id` | 논문 수정 |
+| DELETE | `/api/publications/:id` | 논문 삭제 |
+| POST | `/api/members` | 멤버 추가 |
+| PUT | `/api/members/:id` | 멤버 수정 |
+| DELETE | `/api/members/:id` | 멤버 삭제 |
+| POST | `/api/members/upload` | 멤버 이미지 업로드 |
+| POST | `/api/projects` | 프로젝트 추가 |
+| PUT | `/api/projects/:id` | 프로젝트 수정 |
+| DELETE | `/api/projects/:id` | 프로젝트 삭제 |
+| POST | `/api/news` | 뉴스 추가 |
+| PUT | `/api/news/:id` | 뉴스 수정 |
+| DELETE | `/api/news/:id` | 뉴스 삭제 |
 
 ## Scripts
 
@@ -153,7 +175,24 @@ npm run dev       # Frontend + Backend 동시 실행
 npm run frontend  # Frontend만 실행
 npm run backend   # Backend만 실행
 npm run start     # Production 서버 실행
+npm run seed      # 초기 데이터 시드 (Publications, News, Projects, Members)
 ```
+
+## Data Initialization
+
+데이터베이스에 초기 데이터를 삽입하려면:
+
+```bash
+npm run seed
+```
+
+이 명령은 다음 데이터를 MongoDB에 삽입합니다:
+- **Publications**: 선택된 논문 + Work-in-Progress 논문
+- **News**: 연구실 뉴스 및 공지사항
+- **Projects**: 진행중/완료/예정 프로젝트
+- **Members**: 교수, 연구원(Visiting), PhD/MS 학생
+
+주의: 기존 데이터는 모두 삭제되고 새로운 데이터로 교체됩니다.
 
 ## Deployment
 

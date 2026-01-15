@@ -22,6 +22,14 @@ const AdminLogin = lazy(() => import('./admin/pages/Login'))
 const AdminDashboard = lazy(() => import('./admin/pages/Dashboard'))
 const CourseList = lazy(() => import('./admin/pages/courses/CourseList'))
 const CourseForm = lazy(() => import('./admin/pages/courses/CourseForm'))
+const PublicationList = lazy(() => import('./admin/pages/publications/PublicationList'))
+const PublicationForm = lazy(() => import('./admin/pages/publications/PublicationForm'))
+const MemberList = lazy(() => import('./admin/pages/members/MemberList'))
+const MemberForm = lazy(() => import('./admin/pages/members/MemberForm'))
+const NewsList = lazy(() => import('./admin/pages/news/NewsList'))
+const NewsForm = lazy(() => import('./admin/pages/news/NewsForm'))
+const ProjectList = lazy(() => import('./admin/pages/projects/ProjectList'))
+const ProjectForm = lazy(() => import('./admin/pages/projects/ProjectForm'))
 
 export const router = createBrowserRouter([
   // Public Routes
@@ -56,11 +64,18 @@ export const router = createBrowserRouter([
       { path: 'courses', element: <CourseList /> },
       { path: 'courses/new', element: <CourseForm /> },
       { path: 'courses/edit/:id', element: <CourseForm /> },
-      // 추후 추가될 라우트들
-      // { path: 'publications', element: <PublicationList /> },
-      // { path: 'members', element: <MemberList /> },
-      // { path: 'projects', element: <ProjectList /> },
-      // { path: 'settings', element: <Settings /> },
+      { path: 'publications', element: <PublicationList /> },
+      { path: 'publications/new', element: <PublicationForm /> },
+      { path: 'publications/edit/:id', element: <PublicationForm /> },
+      { path: 'members', element: <MemberList /> },
+      { path: 'members/new', element: <MemberForm /> },
+      { path: 'members/edit/:id', element: <MemberForm /> },
+      { path: 'news', element: <NewsList /> },
+      { path: 'news/new', element: <NewsForm /> },
+      { path: 'news/edit/:id', element: <NewsForm /> },
+      { path: 'projects', element: <ProjectList /> },
+      { path: 'projects/new', element: <ProjectForm /> },
+      { path: 'projects/edit/:id', element: <ProjectForm /> },
     ],
   },
 ])

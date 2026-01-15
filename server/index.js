@@ -79,8 +79,12 @@ keyManager.initialize();
 // 관리자 인증
 app.use('/api/admin', require('./routes/admin/auth'));
 
-// Courses API
+// API Routes
 app.use('/api/courses', require('./routes/courses'));
+app.use('/api/publications', require('./routes/publications'));
+app.use('/api/members', require('./routes/members'));
+app.use('/api/news', require('./routes/news'));
+app.use('/api/projects', require('./routes/projects'));
 
 // 헬스 체크
 app.get('/api/health', (req, res) => {

@@ -11,6 +11,7 @@ import {
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  NotificationOutlined,
 } from '@ant-design/icons';
 import { API_CONFIG } from '../../config/api';
 
@@ -87,6 +88,11 @@ export default function AdminLayout() {
       key: '/admin/projects',
       icon: <ProjectOutlined />,
       label: <Link to="/admin/projects">Projects</Link>,
+    },
+    {
+      key: '/admin/news',
+      icon: <NotificationOutlined />,
+      label: <Link to="/admin/news">News</Link>,
     },
     {
       type: 'divider',

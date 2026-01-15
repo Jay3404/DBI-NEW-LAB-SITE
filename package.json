@@ -12,6 +12,7 @@
     "backend": "nodemon server/index.js",
     "frontend": "npm run dev --prefix client",
     "dev": "concurrently \"npm run backend\" \"npm run dev --prefix client\"",
+    "seed": "node server/seeds/seedData.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
