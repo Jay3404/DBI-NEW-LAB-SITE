@@ -7,24 +7,30 @@ import '../styles/Members.css';
 export default function Students() {
   const [phdStudents, setPhdStudents] = useState([]);
   const [msStudents, setMsStudents] = useState([]);
+  const [bsStudents, setBsStudents] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchStudents = useCallback(async () => {
     try {
-      // Fetch PhD and MS students
-      const [phdRes, msRes] = await Promise.all([
+      // Fetch PhD and MS, BS students
+      const [phdRes, msRes, bsRes] = await Promise.all([
         fetch(`${API_CONFIG.BASE_URL}/api/members?role=PhD`),
-        fetch(`${API_CONFIG.BASE_URL}/api/members?role=MS`)
+        fetch(`${API_CONFIG.BASE_URL}/api/members?role=MS`),
+        fetch(`${API_CONFIG.BASE_URL}/api/members?role=BS`)
       ]);
 
       const phdData = await phdRes.json();
       const msData = await msRes.json();
+      const bsData = await bsRes.json();    
 
       if (phdData.success) {
         setPhdStudents(phdData.data);
       }
       if (msData.success) {
         setMsStudents(msData.data);
+      }
+      if (bsData.success) {
+        setBsStudents(bsData.data);
       }
     } catch {
       console.error('Failed to load students data');
@@ -111,8 +117,17 @@ export default function Students() {
               </div>
             </div>
           )}
+          {/* Bachelor's Program */}
+          {bsStudents.length > 0 && (
+            <div className="student-category">
+              <h3 className="category-title">Undergraduate Internship</h3>
+              <div className="students-grid">
+                {bsStudents.map(renderStudentCard)}
+              </div>
+            </div>
+          )}
 
-          {phdStudents.length === 0 && msStudents.length === 0 && (
+          {phdStudents.length === 0 && msStudents.length === 0 && bsStudents.length === 0 && (
             <p style={{ textAlign: 'center', padding: 50 }}>No students data available.</p>
           )}
         </div>

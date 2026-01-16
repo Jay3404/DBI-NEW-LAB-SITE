@@ -2,10 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import '../styles/Courses.css';
 import { API_CONFIG } from '../config/api';
 
-// Fallback 이미지 (API 실패 시 사용)
-import hanyangIcon from '../assets/hanyang_icon.png';
-import snuIcon from '../assets/snu_icon.png';
-
 // 기존 이미지들 (fallback용)
 import OT_25 from '../assets/course_imgs/OT_25.png';
 import DS_25 from '../assets/course_imgs/DS_25.png';
@@ -15,39 +11,30 @@ import ERP_25 from '../assets/course_imgs/ERP_25.png';
 import BIAI_25 from '../assets/course_imgs/BIAI_25.png';
 import CD1_25 from '../assets/course_imgs/CD1_25.png';
 import ISD_sp25 from '../assets/course_imgs/ISD_sp25.png';
-import OT_24 from '../assets/course_imgs/OT_24.png';
-import ISA_24 from '../assets/course_imgs/ISA_24.png';
-import IS_24 from '../assets/course_imgs/IS_24.png';
-import IS_23 from '../assets/course_imgs/IS_23.png';
+import ISA_25 from '../assets/course_imgs/ISA_24.png';
 
 // Fallback 데이터
 const FALLBACK_COURSES = {
   Hanyang: [
-    { id: 1, name: 'Object Oriented Thinking', term: 'Spring', grad: 'Undergraduate', year: '2025', image: OT_25 },
-    { id: 2, name: 'Database Systems', term: 'Spring', grad: 'Undergraduate', year: '2025', image: DS_25 },
-    { id: 3, name: 'Information System Design', term: 'Fall', grad: 'Graduate', year: '2025', image: ISD_fa25 },
-    { id: 4, name: 'Capstone Design 2', term: 'Fall', grad: 'Undergraduate', year: '2025', image: CD2_25 },
-    { id: 5, name: 'ERP', term: 'Spring', grad: 'Graduate', year: '2025', image: ERP_25 },
-    { id: 6, name: 'Business Intelligence & AI', term: 'Spring', grad: 'Graduate', year: '2025', image: BIAI_25 },
-    { id: 7, name: 'Capstone Design 1', term: 'Spring', grad: 'Undergraduate', year: '2025', image: CD1_25 },
-    { id: 8, name: 'Information System Design', term: 'Spring', grad: 'Graduate', year: '2025', image: ISD_sp25 },
-    { id: 9, name: 'Object Oriented Thinking', term: 'Fall', grad: 'Undergraduate', year: '2024', image: OT_24 },
-    { id: 10, name: 'Information System Architecture', term: 'Fall', grad: 'Graduate', year: '2024', image: ISA_24 },
-  ],
-  SNU: [
-    { id: 11, name: 'Information Systems', term: 'Fall', grad: 'Graduate', year: '2024', image: IS_24 },
-    { id: 12, name: 'Information Systems', term: 'Fall', grad: 'Graduate', year: '2023', image: IS_23 },
+    // Undergraduate - Spring
+    { id: 1, name: 'Organization Theory', term: 'Spring', grad: 'Undergraduate', year: '2024, 2025', image: OT_25 },
+    { id: 2, name: 'ERP Systems', term: 'Spring', grad: 'Undergraduate', year: '2025', image: ERP_25 },
+    { id: 3, name: 'Career Development I', term: 'Spring', grad: 'Undergraduate', year: '2025', image: CD1_25 },
+    { id: 4, name: 'Business Intelligence & AI Implementation', term: 'Spring', grad: 'Undergraduate', year: '2025', image: BIAI_25 },
+    // Undergraduate - Fall
+    { id: 5, name: 'Decision Support with Data Science', term: 'Fall', grad: 'Undergraduate', year: '2025', image: DS_25 },
+    { id: 6, name: 'Information Systems Design', term: 'Fall', grad: 'Undergraduate', year: '2025', image: ISD_fa25 },
+    { id: 7, name: 'Career Development II', term: 'Fall', grad: 'Undergraduate', year: '2025', image: CD2_25 },
+    // Graduate - Spring
+    { id: 8, name: 'Information Systems Design', term: 'Spring', grad: 'Graduate', year: '2025', image: ISD_sp25 },
+    // Graduate - Fall
+    { id: 9, name: 'Information Systems Analysis', term: 'Fall', grad: 'Graduate', year: '2025', image: ISA_25 },
   ]
 };
 
 export default function Courses() {
   const [courses, setCourses] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({
-    university: 'All',
-    term: 'All',
-    grad: 'All'
-  });
 
   // API에서 데이터 로드
   useEffect(() => {
@@ -62,10 +49,9 @@ export default function Courses() {
       if (data.success && Object.keys(data.data).length > 0) {
         setCourses(data.data);
       } else {
-        // API 데이터가 없으면 fallback 사용
         setCourses(FALLBACK_COURSES);
       }
-    } catch (err) {
+    } catch {
       console.log('Using fallback course data');
       setCourses(FALLBACK_COURSES);
     } finally {
@@ -73,41 +59,41 @@ export default function Courses() {
     }
   };
 
-  // 필터 적용
-  const filteredCourses = useMemo(() => {
+  // 대학별로 데이터를 grad와 term으로 그룹화
+  const groupedData = useMemo(() => {
     if (!courses) return {};
 
     const result = {};
 
     Object.entries(courses).forEach(([university, courseList]) => {
-      // University 필터
-      if (filters.university !== 'All' && university !== filters.university) {
-        return;
-      }
+      result[university] = {
+        Undergraduate: {
+          Spring: [],
+          Fall: []
+        },
+        Graduate: {
+          Spring: [],
+          Fall: []
+        }
+      };
 
-      const filtered = courseList.filter(course => {
-        if (filters.term !== 'All' && course.term !== filters.term) return false;
-        if (filters.grad !== 'All' && course.grad !== filters.grad) return false;
-        return true;
+      courseList.forEach(course => {
+        const grad = course.grad;
+        const term = course.term;
+        if (result[university][grad] && result[university][grad][term]) {
+          result[university][grad][term].push(course);
+        }
       });
-
-      if (filtered.length > 0) {
-        result[university] = filtered;
-      }
     });
 
     return result;
-  }, [courses, filters]);
-
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-  };
+  }, [courses]);
 
   const getImageUrl = (image) => {
     if (!image) return '';
     if (image.startsWith('http') || image.startsWith('data:')) return image;
     if (image.startsWith('/')) return `${API_CONFIG.BASE_URL}${image}`;
-    return image; // 이미 import된 이미지
+    return image;
   };
 
   if (loading) {
@@ -121,6 +107,12 @@ export default function Courses() {
     );
   }
 
+  // 특정 grad 레벨에 코스가 있는지 확인
+  const hasCoursesInGrad = (universityData, grad) => {
+    if (!universityData || !universityData[grad]) return false;
+    return universityData[grad].Spring.length > 0 || universityData[grad].Fall.length > 0;
+  };
+
   return (
     <div className="courses-container">
       {/* Header */}
@@ -128,101 +120,120 @@ export default function Courses() {
         <h1 className="courses-title">Courses</h1>
       </div>
 
-      {/* Filters */}
-      <div className="courses-filters">
-        <div className="filter-group">
-          <span className="filter-label">University</span>
-          <div className="filter-buttons">
-            {['All', 'Hanyang', 'SNU'].map(option => (
-              <button
-                key={option}
-                className={`filter-btn ${filters.university === option ? 'active' : ''}`}
-                onClick={() => handleFilterChange('university', option)}
-              >
-                {option === 'Hanyang' && <img src={hanyangIcon} alt="" className="filter-icon" />}
-                {option === 'SNU' && <img src={snuIcon} alt="" className="filter-icon" />}
-                <span>{option}</span>
-              </button>
-            ))}
+      {/* Course Tables by University */}
+      {Object.entries(groupedData).map(([university, data]) => (
+        <div key={university} className="university-table-section">
+          {/* University Header */}
+          <div className="university-table-header">
+            <span>{university === 'Hanyang' ? 'Hanyang University' : 'Seoul National University'}</span>
           </div>
-        </div>
 
-        <div className="filter-group">
-          <span className="filter-label">Term</span>
-          <div className="filter-buttons">
-            {['All', 'Spring', 'Fall'].map(option => (
-              <button
-                key={option}
-                className={`filter-btn ${filters.term === option ? 'active' : ''}`}
-                onClick={() => handleFilterChange('term', option)}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="filter-group">
-          <span className="filter-label">Level</span>
-          <div className="filter-buttons">
-            {['All', 'Undergraduate', 'Graduate'].map(option => (
-              <button
-                key={option}
-                className={`filter-btn ${filters.grad === option ? 'active' : ''}`}
-                onClick={() => handleFilterChange('grad', option)}
-              >
-                {option === 'Undergraduate' ? 'UG' : option === 'Graduate' ? 'Grad' : option}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Course Sections by University */}
-      {Object.keys(filteredCourses).length === 0 ? (
-        <div className="courses-empty">
-          <p>No courses found matching your filters.</p>
-        </div>
-      ) : (
-        Object.entries(filteredCourses).map(([university, courseList]) => (
-          <section key={university} className="university-section">
-            <div className="university-header">
-              <img
-                src={university === 'Hanyang' ? hanyangIcon : snuIcon}
-                alt={university}
-                className="university-icon"
-              />
-              <h2 className="university-name">
-                {university === 'Hanyang' ? 'Hanyang University' : 'Seoul National University'}
-              </h2>
+          {/* Table Structure */}
+          <div className="courses-table">
+            {/* Term Headers */}
+            <div className="table-row table-header-row">
+              <div className="table-cell grad-label-cell"></div>
+              <div className="table-cell term-header spring">Spring</div>
+              <div className="table-cell term-header fall">Fall</div>
             </div>
 
-            <div className="courses-grid">
-              {courseList.map((course) => (
-                <div key={course._id || course.id} className="course-card">
-                  <div
-                    className="course-card-image"
-                    style={{ backgroundImage: `url(${getImageUrl(course.image)})` }}
-                  >
-                    <div className="course-card-overlay">
-                      <h3 className="course-card-title">{course.name}</h3>
-                      <div className="course-card-tags">
-                        <span className={`course-tag term-${course.term.toLowerCase()}`}>
-                          {course.term}
-                        </span>
-                        <span className={`course-tag grad-${course.grad.toLowerCase()}`}>
-                          {course.grad === 'Undergraduate' ? 'UG' : 'Grad'}
-                        </span>
-                      </div>
-                      <p className="course-card-year">{course.year}</p>
-                    </div>
+            {/* Undergraduate Row */}
+            {hasCoursesInGrad(data, 'Undergraduate') && (
+              <div className="table-row">
+                <div className="table-cell grad-label-cell">
+                  <div className="grad-label">Under<br/>graduated</div>
+                </div>
+                <div className="table-cell courses-cell">
+                  <div className="courses-cell-content">
+                    {data.Undergraduate.Spring.map((course) => (
+                      <CourseCard
+                        key={course._id || course.id}
+                        course={course}
+                        getImageUrl={getImageUrl}
+                      />
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          </section>
-        ))
+                <div className="table-cell courses-cell">
+                  <div className="courses-cell-content">
+                    {data.Undergraduate.Fall.map((course) => (
+                      <CourseCard
+                        key={course._id || course.id}
+                        course={course}
+                        getImageUrl={getImageUrl}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Graduate Row */}
+            {hasCoursesInGrad(data, 'Graduate') && (
+              <div className="table-row">
+                <div className="table-cell grad-label-cell">
+                  <div className="grad-label">Graduated</div>
+                </div>
+                <div className="table-cell courses-cell">
+                  <div className="courses-cell-content">
+                    {data.Graduate.Spring.map((course) => (
+                      <CourseCard
+                        key={course._id || course.id}
+                        course={course}
+                        getImageUrl={getImageUrl}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="table-cell courses-cell">
+                  <div className="courses-cell-content">
+                    {data.Graduate.Fall.map((course) => (
+                      <CourseCard
+                        key={course._id || course.id}
+                        course={course}
+                        getImageUrl={getImageUrl}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+
+      {/* Empty State */}
+      {Object.keys(groupedData).length === 0 && (
+        <div className="courses-empty">
+          <p>No courses available.</p>
+        </div>
       )}
+    </div>
+  );
+}
+
+// Course Card Component
+function CourseCard({ course, getImageUrl }) {
+  const handleClick = () => {
+    if (course.link) {
+      window.open(course.link, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  return (
+    <div
+      className={`course-card ${course.link ? 'clickable' : ''}`}
+      onClick={handleClick}
+    >
+      <div
+        className="course-card-image"
+        style={{ backgroundImage: `url(${getImageUrl(course.image)})` }}
+      >
+        <div className="course-card-overlay">
+          <h3 className="course-card-title">{course.name}</h3>
+          <p className="course-card-year">{course.year}</p>
+        </div>
+      </div>
     </div>
   );
 }

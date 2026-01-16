@@ -39,119 +39,116 @@
   border-radius: 12px;
 }
 
-/* ==================== FILTERS ==================== */
-.courses-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
+/* ==================== UNIVERSITY TABLE SECTION ==================== */
+.university-table-section {
   margin-bottom: 48px;
-  padding: 24px;
-  background: #f8f9fa;
-  border-radius: 12px;
 }
 
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.filter-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #555;
-  min-width: 70px;
-}
-
-.filter-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-.filter-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  background: white;
-  color: #333;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.filter-btn:hover {
-  border-color: #0E4A84;
-  color: #0E4A84;
-}
-
-.filter-btn.active {
+/* University Header Bar */
+.university-table-header {
   background: #0E4A84;
-  border-color: #0E4A84;
   color: white;
+  padding: 14px 24px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 4px 4px 0 0;
 }
 
-.filter-icon {
-  width: 16px;
-  height: 16px;
-  object-fit: contain;
+/* ==================== TABLE STRUCTURE ==================== */
+.courses-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-top: none;
 }
 
-.filter-btn.active .filter-icon {
-  filter: brightness(10);
+.table-row {
+  display: flex;
+  border-bottom: 1px solid #ddd;
 }
 
-/* ==================== UNIVERSITY SECTION ==================== */
-.university-section {
-  margin-bottom: 48px;
+.table-row:last-child {
+  border-bottom: none;
 }
 
-.university-header {
+.table-cell {
+  box-sizing: border-box;
+}
+
+/* Grad Label Cell (Left Column) */
+.grad-label-cell {
+  width: 140px;
+  min-width: 140px;
+  background: #5A7A9A;
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #eee;
+  justify-content: center;
+  padding: 20px 16px;
 }
 
-.university-icon {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
+.table-header-row .grad-label-cell {
+  background: transparent;
 }
 
-.university-name {
-  font-size: 20px;
+.grad-label {
+  color: white;
+  font-size: 16px;
   font-weight: 600;
-  color: #333;
-  margin: 0;
+  text-align: center;
+  line-height: 1.4;
 }
 
-/* ==================== COURSE GRID ==================== */
-.courses-grid {
+/* Term Headers */
+.term-header {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+}
+
+.term-header.spring {
+  background: #4A7FB5;
+}
+
+.term-header.fall {
+  background: #3D8B8B;
+}
+
+/* Courses Cell */
+.courses-cell {
+  flex: 1;
+  padding: 16px;
+  background: #f8f9fa;
+  border-left: 1px solid #ddd;
+}
+
+.courses-cell-content {
   display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* ==================== COURSE CARD ==================== */
 .course-card {
-  width: 280px;
-  height: 200px;
-  border-radius: 12px;
+  width: 100%;
+  height: 100px;
+  border-radius: 8px;
   overflow: hidden;
   position: relative;
-  cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
-.course-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+.course-card.clickable {
+  cursor: pointer;
+}
+
+.course-card.clickable:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 
 .course-card-image {
@@ -162,70 +159,34 @@
   background-repeat: no-repeat;
 }
 
-/* Overlay */
+/* Overlay - Always Visible */
 .course-card-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
+  top: 0;
   padding: 16px;
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
+  background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
   color: white;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.course-card:hover .course-card-overlay {
-  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .course-card-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
   line-height: 1.3;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-/* Tags */
-.course-card-tags {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 6px;
-}
-
-.course-tag {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.course-tag.term-spring {
-  background: #52c41a;
-}
-
-.course-tag.term-fall {
-  background: #fa8c16;
-}
-
-.course-tag.grad-undergraduate {
-  background: #1890ff;
-}
-
-.course-tag.grad-graduate {
-  background: #722ed1;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 .course-card-year {
-  font-size: 12px;
+  font-size: 13px;
   margin: 0;
   opacity: 0.9;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 /* ==================== RESPONSIVE ==================== */
@@ -234,13 +195,25 @@
     padding: 30px;
   }
 
-  .course-card {
-    width: calc(50% - 12px);
-    height: 180px;
+  .grad-label-cell {
+    width: 100px;
+    min-width: 100px;
   }
 
-  .courses-grid {
-    gap: 16px;
+  .grad-label {
+    font-size: 14px;
+  }
+
+  .course-card {
+    height: 90px;
+  }
+
+  .course-card-title {
+    font-size: 14px;
+  }
+
+  .course-card-year {
+    font-size: 12px;
   }
 }
 
@@ -254,36 +227,63 @@
     font-size: 26px;
   }
 
-  .courses-filters {
-    flex-direction: column;
-    gap: 16px;
+  .university-table-header {
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+
+  /* Switch to stacked layout on mobile */
+  .courses-table {
+    display: block;
+  }
+
+  .table-row {
+    display: block;
+  }
+
+  .table-header-row {
+    display: none;
+  }
+
+  .grad-label-cell {
+    width: 100%;
+    padding: 12px 16px;
+  }
+
+  .grad-label {
+    font-size: 15px;
+  }
+
+  .grad-label br {
+    display: none;
+  }
+
+  .courses-cell {
+    border-left: none;
+    border-top: 1px solid #ddd;
     padding: 16px;
   }
 
-  .filter-group {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .filter-buttons {
+  .courses-cell-content {
+    flex-direction: row;
     flex-wrap: wrap;
-  }
-
-  .filter-btn {
-    padding: 6px 12px;
-    font-size: 12px;
+    gap: 12px;
   }
 
   .course-card {
-    width: 100%;
-    height: 200px;
+    width: calc(50% - 6px);
+    max-width: none;
+    height: 110px;
   }
 
-  /* 모바일에서는 오버레이 항상 표시 */
-  .course-card-overlay {
-    opacity: 1;
-    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 80%, transparent 100%);
+  /* Add term labels on mobile */
+  .courses-cell::before {
+    content: attr(data-term);
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4A7FB5;
+    margin-bottom: 12px;
   }
 }
 
@@ -297,24 +297,21 @@
     font-size: 22px;
   }
 
-  .university-header {
-    margin-bottom: 16px;
-  }
-
-  .university-name {
-    font-size: 16px;
-  }
-
-  .university-icon {
-    width: 24px;
-    height: 24px;
+  .university-table-header {
+    font-size: 14px;
+    padding: 10px 12px;
   }
 
   .course-card {
-    height: 180px;
+    width: 100%;
+    height: 100px;
   }
 
   .course-card-title {
     font-size: 14px;
+  }
+
+  .course-card-overlay {
+    padding: 12px;
   }
 }

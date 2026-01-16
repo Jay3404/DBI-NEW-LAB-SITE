@@ -30,6 +30,7 @@ const NewsList = lazy(() => import('./admin/pages/news/NewsList'))
 const NewsForm = lazy(() => import('./admin/pages/news/NewsForm'))
 const ProjectList = lazy(() => import('./admin/pages/projects/ProjectList'))
 const ProjectForm = lazy(() => import('./admin/pages/projects/ProjectForm'))
+const Settings = lazy(() => import('./admin/pages/Settings'))
 
 export const router = createBrowserRouter([
   // Public Routes
@@ -76,6 +77,7 @@ export const router = createBrowserRouter([
       { path: 'projects', element: <ProjectList /> },
       { path: 'projects/new', element: <ProjectForm /> },
       { path: 'projects/edit/:id', element: <ProjectForm /> },
+      { path: 'settings', element: <Settings /> },
     ],
   },
 ])

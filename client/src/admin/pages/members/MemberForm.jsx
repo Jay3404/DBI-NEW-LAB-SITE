@@ -196,7 +196,7 @@ export default function MemberForm() {
                   label="Name (English)"
                   rules={[{ required: true, message: '이름을 입력해주세요' }]}
                 >
-                  <Input placeholder="Hong Gildong" style={{ width: 200 }} />
+                  <Input placeholder="Gildong Hong" style={{ width: 200 }} />
                 </Form.Item>
 
                 <Form.Item name="nameKo" label="Name (Korean)">
@@ -213,7 +213,7 @@ export default function MemberForm() {
                     <Select.Option value="Research Professor">Research Professor</Select.Option>
                     <Select.Option value="PhD">PhD</Select.Option>
                     <Select.Option value="MS">MS</Select.Option>
-                    <Select.Option value="BS">BS</Select.Option>
+                    <Select.Option value="BS">Undergraduate Internship</Select.Option>
                     <Select.Option value="Visiting">Visiting</Select.Option>
                     <Select.Option value="Alumni">Alumni</Select.Option>
                   </Select>

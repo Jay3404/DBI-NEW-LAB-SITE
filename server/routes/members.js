@@ -196,9 +196,10 @@ router.delete('/:id', requireAdmin, async (req, res) => {
 });
 
 /**
- * POST /api/members/upload-image
+ * POST /api/members/upload
+ * 멤버 이미지 업로드 (관리자 전용)
  */
-router.post('/upload-image', requireAdmin, upload.single('image'), async (req, res) => {
+router.post('/upload', requireAdmin, upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({
@@ -208,12 +209,18 @@ router.post('/upload-image', requireAdmin, upload.single('image'), async (req, r
       });
     }
 
+    const imagePath = `/uploads/members/${req.file.filename}`;
+
     res.json({
       success: true,
       message: '이미지가 업로드되었습니다.',
-      url: `/uploads/courses/${req.file.filename}`
+      data: {
+        path: imagePath,
+        filename: req.file.filename
+      }
     });
   } catch (err) {
+    console.error('이미지 업로드 오류:', err);
     res.status(500).json({
       success: false,
       error: 'UploadError',

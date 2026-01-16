@@ -78,6 +78,7 @@ keyManager.initialize();
 
 // 관리자 인증
 app.use('/api/admin', require('./routes/admin/auth'));
+app.use('/api/admin/settings', require('./routes/admin/settings'));
 
 // API Routes
 app.use('/api/courses', require('./routes/courses'));
