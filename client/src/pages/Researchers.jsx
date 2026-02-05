@@ -10,7 +10,7 @@ export default function Researchers() {
 
   const fetchResearchers = useCallback(async () => {
     try {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/api/members?role=Visiting`);
+      const res = await fetch(`${API_CONFIG.BASE_URL}/api/members?role=Visiting&isAlumni=false`);
       const data = await res.json();
       if (data.success) {
         setResearchers(data.data);

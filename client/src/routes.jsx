@@ -1,6 +1,6 @@
 // src/routes.jsx
 import { lazy } from 'react'
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import App from './App'
 
 // Public Pages
@@ -8,10 +8,10 @@ const Home = lazy(() => import('./pages/Home'))
 const Research = lazy(() => import('./pages/Research'))
 const SelectedPublications = lazy(() => import('./pages/SelectedPublications'))
 const WorkInProgressPublications = lazy(() => import('./pages/WorkInProgressPublications'))
-const Members = lazy(() => import('./pages/Members'))
 const Professor = lazy(() => import('./pages/Professor'))
 const Researchers = lazy(() => import('./pages/Researchers'))
 const Students = lazy(() => import('./pages/Students'))
+const Alumni = lazy(() => import('./pages/Alumni'))
 const Projects = lazy(() => import('./pages/Projects'))
 const Courses = lazy(() => import('./pages/Courses'))
 const News = lazy(() => import('./pages/News'))
@@ -42,10 +42,11 @@ export const router = createBrowserRouter([
       { path: 'research', element: <Research /> },
       { path: 'selected-publications', element: <SelectedPublications /> },
       { path: 'work-in-progress-publications', element: <WorkInProgressPublications /> },
-      { path: 'members', element: <Members /> },
+      { path: 'members', element: <Navigate to="/professor" replace /> },
       { path: 'professor', element: <Professor /> },
       { path: 'researchers', element: <Researchers /> },
       { path: 'students', element: <Students /> },
+      { path: 'alumni', element: <Alumni /> },
       { path: 'projects', element: <Projects /> },
       { path: 'courses', element: <Courses /> },
       { path: 'news', element: <News /> },

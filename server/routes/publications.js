@@ -9,7 +9,7 @@ const { requireAdmin } = require('../middleware/adminAuth');
  */
 router.get('/', async (req, res) => {
   try {
-    const { year, yearLte, category, type, selected, wip, active } = req.query;
+    const { year, yearLte, category, type, selected, isSelected, wip, active } = req.query;
 
     const filter = {};
 
@@ -17,7 +17,8 @@ router.get('/', async (req, res) => {
     if (yearLte) filter.year = { $lte: parseInt(yearLte) };
     if (category) filter.category = category;
     if (type) filter.type = type;
-    if (selected === 'true') filter.isSelected = true;
+    if (selected === 'true' || isSelected === 'true') filter.isSelected = true;
+    if (isSelected === 'false') filter.isSelected = { $ne: true };
     if (wip === 'true') filter.isWorkInProgress = true;
     if (active !== 'false') filter.isActive = true;
 

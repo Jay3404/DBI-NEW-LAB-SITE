@@ -62,6 +62,29 @@ export default function Professor() {
 
   const details = professor.parsedDetails;
 
+  // Helper function to convert text with URLs to clickable links
+  const renderTextWithLinks = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+
+    return parts.map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#1890ff', textDecoration: 'underline' }}
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
   return (
     <div className="member-container">
       {/* Header Section */}
@@ -135,21 +158,27 @@ export default function Professor() {
                   <p><strong>Professional Experience</strong></p>
                   <div style={{ marginLeft: '20px' }}>
                     {details.professionalExperience.map((exp, idx) => (
-                      <p key={idx}>• {exp}</p>
+                      <p key={idx}>• {renderTextWithLinks(exp)}</p>
                     ))}
-                    {details.affiliations && (
-                      <div style={{ marginLeft: '20px' }}>
-                        <p>Affiliations</p>
-                        <div style={{ marginLeft: '20px' }}>
-                          {details.affiliations.map((aff, idx) => (
-                            <p key={idx}>• {aff}</p>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    <p><em>*For a more detailed career history, visit my LinkedIn profile.</em></p>
                   </div>
                 </>
+              )}
+
+              {details.affiliations && (
+                <>
+                  <p><strong>Affiliations</strong></p>
+                  <div style={{ marginLeft: '20px' }}>
+                    {details.affiliations.map((aff, idx) => (
+                      <p key={idx}>• {renderTextWithLinks(aff)}</p>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {(details.professionalExperience || details.affiliations) && (
+                <p style={{ marginLeft: '20px' }}>
+                  <em>*For a more detailed career history, visit my LinkedIn profile.</em>
+                </p>
               )}
 
               {details.evaluationRoles && (

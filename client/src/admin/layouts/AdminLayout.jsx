@@ -188,7 +188,9 @@ export default function AdminLayout() {
           padding: 24,
           background: '#fff',
           borderRadius: 8,
-          minHeight: 280
+          minHeight: 280,
+          overflow: 'auto',
+          maxHeight: 'calc(100vh - 112px)'
         }}>
           <Outlet />
         </Content>

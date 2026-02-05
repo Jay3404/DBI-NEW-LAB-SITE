@@ -114,6 +114,12 @@ const MemberSchema = new Schema({
     type: Number
   },
 
+  // Alumni 여부
+  isAlumni: {
+    type: Boolean,
+    default: false
+  },
+
   // 현재 소속 (Alumni인 경우)
   currentPosition: {
     type: String,

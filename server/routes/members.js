@@ -9,15 +9,18 @@ const upload = require('../lib/upload');
  */
 router.get('/', async (req, res) => {
   try {
-    const { role, active } = req.query;
+    const { role, active, isAlumni } = req.query;
 
     const filter = {};
 
     if (role) filter.role = role;
     if (active !== 'false') filter.isActive = true;
+    if (isAlumni === 'true') filter.isAlumni = true;
+    if (isAlumni === 'false') filter.isAlumni = { $ne: true };
 
+    // Sort by order within each role, then by joinYear (oldest first), then by creation date
     const members = await Member.find(filter)
-      .sort({ order: 1, createdAt: -1 });
+      .sort({ order: 1, joinYear: 1, createdAt: 1 });
 
     res.json({
       success: true,
@@ -41,7 +44,7 @@ router.get('/', async (req, res) => {
 router.get('/grouped', async (req, res) => {
   try {
     const members = await Member.find({ isActive: true })
-      .sort({ order: 1, createdAt: -1 });
+      .sort({ order: 1, joinYear: 1, createdAt: 1 });
 
     const roleOrder = ['Professor', 'Research Professor', 'PhD', 'MS', 'BS', 'Visiting', 'Alumni'];
 
@@ -99,6 +102,16 @@ router.get('/:id', async (req, res) => {
  */
 router.post('/', requireAdmin, async (req, res) => {
   try {
+    // If order is not provided, auto-generate based on role
+    if (req.body.order === undefined || req.body.order === null || req.body.order === '') {
+      const role = req.body.role;
+      if (role) {
+        // Count existing members with the same role to assign the next order
+        const count = await Member.countDocuments({ role });
+        req.body.order = count;
+      }
+    }
+
     const member = new Member(req.body);
     await member.save();
 

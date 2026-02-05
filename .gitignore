@@ -34,8 +34,7 @@ yarn-error.log*
 .admin-key
 
 # Uploads (keep directory structure)
-/uploads/*
-!/uploads/.gitkeep
+/uploads
 
 # Backup files
 *.bak
@@ -44,3 +43,6 @@ yarn-error.log*
 # Coverage
 coverage/
 .nyc_output/
+
+# Serena MCP cache and project files
+.serena/

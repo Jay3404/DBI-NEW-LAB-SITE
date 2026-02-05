@@ -14,9 +14,9 @@ export default function Students() {
     try {
       // Fetch PhD and MS, BS students
       const [phdRes, msRes, bsRes] = await Promise.all([
-        fetch(`${API_CONFIG.BASE_URL}/api/members?role=PhD`),
-        fetch(`${API_CONFIG.BASE_URL}/api/members?role=MS`),
-        fetch(`${API_CONFIG.BASE_URL}/api/members?role=BS`)
+        fetch(`${API_CONFIG.BASE_URL}/api/members?role=PhD&isAlumni=false`),
+        fetch(`${API_CONFIG.BASE_URL}/api/members?role=MS&isAlumni=false`),
+        fetch(`${API_CONFIG.BASE_URL}/api/members?role=BS&isAlumni=false`)
       ]);
 
       const phdData = await phdRes.json();
@@ -120,7 +120,7 @@ export default function Students() {
           {/* Bachelor's Program */}
           {bsStudents.length > 0 && (
             <div className="student-category">
-              <h3 className="category-title">Undergraduate Internship</h3>
+              <h3 className="category-title">Research Internship</h3>
               <div className="students-grid">
                 {bsStudents.map(renderStudentCard)}
               </div>

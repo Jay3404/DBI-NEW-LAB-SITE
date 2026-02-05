@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Table, Button, Space, Tag, message, Popconfirm, Select, Card,
-  Typography, Row, Col, Avatar, Switch
+  Typography, Row, Col, Avatar
 } from 'antd';
 import {
   PlusOutlined, EditOutlined, DeleteOutlined,
@@ -16,7 +16,8 @@ export default function MemberList() {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    role: ''
+    role: '',
+    isAlumni: ''
   });
   const navigate = useNavigate();
 
@@ -25,6 +26,7 @@ export default function MemberList() {
     try {
       const params = new URLSearchParams();
       if (filters.role) params.append('role', filters.role);
+      if (filters.isAlumni) params.append('isAlumni', filters.isAlumni);
       params.append('active', 'false');
 
       const res = await fetch(
@@ -61,25 +63,6 @@ export default function MemberList() {
       }
     } catch {
       message.error('삭제 실패');
-    }
-  };
-
-  const handleToggleActive = async (record) => {
-    try {
-      const res = await fetch(`${API_CONFIG.BASE_URL}/api/members/${record._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ isActive: !record.isActive })
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        message.success(record.isActive ? '비활성화 되었습니다.' : '활성화 되었습니다.');
-        fetchMembers();
-      }
-    } catch {
-      message.error('변경 실패');
     }
   };
 
@@ -140,19 +123,6 @@ export default function MemberList() {
       width: 90
     },
     {
-      title: 'Active',
-      dataIndex: 'isActive',
-      key: 'isActive',
-      width: 80,
-      render: (isActive, record) => (
-        <Switch
-          checked={isActive}
-          size="small"
-          onChange={() => handleToggleActive(record)}
-        />
-      )
-    },
-    {
       title: '',
       key: 'actions',
       width: 80,
@@ -207,7 +177,22 @@ export default function MemberList() {
                   { value: 'MS', label: 'MS' },
                   { value: 'BS', label: 'BS' },
                   { value: 'Visiting', label: 'Visiting' },
-                  { value: 'Alumni', label: 'Alumni' },
+                ]}
+              />
+            </Space>
+          </Col>
+          <Col>
+            <Space>
+              <span>Alumni:</span>
+              <Select
+                allowClear
+                placeholder="All"
+                style={{ width: 100 }}
+                value={filters.isAlumni || undefined}
+                onChange={(v) => setFilters(prev => ({ ...prev, isAlumni: v || '' }))}
+                options={[
+                  { value: 'true', label: 'Yes' },
+                  { value: 'false', label: 'No' },
                 ]}
               />
             </Space>

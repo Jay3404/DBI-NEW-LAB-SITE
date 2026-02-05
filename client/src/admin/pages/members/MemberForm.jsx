@@ -114,6 +114,7 @@ export default function MemberForm() {
   };
 
   const role = Form.useWatch('role', form);
+  const isAlumni = Form.useWatch('isAlumni', form);
 
   // Show student-specific fields for PhD, MS, BS
   const isStudent = ['PhD', 'MS', 'BS'].includes(role);
@@ -160,6 +161,7 @@ export default function MemberForm() {
             role: 'MS',
             isActive: true,
             isLabManager: false,
+            isAlumni: false,
             researchInterests: ['']
           }}
         >
@@ -213,10 +215,13 @@ export default function MemberForm() {
                     <Select.Option value="Research Professor">Research Professor</Select.Option>
                     <Select.Option value="PhD">PhD</Select.Option>
                     <Select.Option value="MS">MS</Select.Option>
-                    <Select.Option value="BS">Undergraduate Internship</Select.Option>
+                    <Select.Option value="BS">Research Internship</Select.Option>
                     <Select.Option value="Visiting">Visiting</Select.Option>
-                    <Select.Option value="Alumni">Alumni</Select.Option>
                   </Select>
+                </Form.Item>
+
+                <Form.Item name="isAlumni" valuePropName="checked" label="Alumni">
+                  <Switch checkedChildren="Yes" unCheckedChildren="No" />
                 </Form.Item>
               </Space>
             </div>
@@ -301,14 +306,14 @@ export default function MemberForm() {
               <InputNumber min={1990} max={2030} placeholder="2024" />
             </Form.Item>
 
-            {role === 'Alumni' && (
+            {isAlumni && (
               <>
                 <Form.Item name="graduationYear" label="Graduation Year">
                   <InputNumber min={1990} max={2030} placeholder="2024" />
                 </Form.Item>
 
                 <Form.Item name="currentPosition" label="Current Position">
-                  <Input placeholder="Software Engineer at Google" style={{ width: 300 }} />
+                  <Input placeholder="e.g., Samsung Card, Google Korea" style={{ width: 300 }} />
                 </Form.Item>
               </>
             )}
@@ -357,8 +362,12 @@ export default function MemberForm() {
           <Divider />
 
           <Space size="large">
-            <Form.Item name="order" label="Order">
-              <InputNumber min={0} placeholder="0" />
+            <Form.Item
+              name="order"
+              label="Order"
+              extra="선택사항. 비워두면 자동으로 순서가 지정됩니다."
+            >
+              <InputNumber min={0} placeholder="Auto" />
             </Form.Item>
 
             <Form.Item name="isActive" valuePropName="checked" label="Active">

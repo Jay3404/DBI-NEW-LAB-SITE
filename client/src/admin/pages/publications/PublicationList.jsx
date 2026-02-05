@@ -18,7 +18,8 @@ export default function PublicationList() {
   const [filters, setFilters] = useState({
     year: '',
     category: '',
-    type: ''
+    type: '',
+    isSelected: ''
   });
   const navigate = useNavigate();
 
@@ -29,6 +30,7 @@ export default function PublicationList() {
       if (filters.year) params.append('year', filters.year);
       if (filters.category) params.append('category', filters.category);
       if (filters.type) params.append('type', filters.type);
+      if (filters.isSelected) params.append('isSelected', filters.isSelected);
       params.append('active', 'false');
 
       const res = await fetch(
@@ -244,6 +246,22 @@ export default function PublicationList() {
                   { value: 'Journal', label: 'Journal' },
                   { value: 'Conference', label: 'Conference' },
                   { value: 'Patent', label: 'Patent' },
+                ]}
+              />
+            </Space>
+          </Col>
+          <Col>
+            <Space>
+              <span>Selected:</span>
+              <Select
+                allowClear
+                placeholder="All"
+                style={{ width: 100 }}
+                value={filters.isSelected || undefined}
+                onChange={(v) => setFilters(prev => ({ ...prev, isSelected: v || '' }))}
+                options={[
+                  { value: 'true', label: 'Yes' },
+                  { value: 'false', label: 'No' },
                 ]}
               />
             </Space>
