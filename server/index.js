@@ -61,15 +61,9 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // ============================================
-// Key Manager 초기화
+// Admin 인증 초기화
 // ============================================
 const keyManager = require('./lib/keyManager');
-const emailService = require('./lib/emailService');
-
-// 이메일 서비스 초기화
-emailService.initialize();
-
-// Key Manager 초기화 (분기별 자동 갱신 스케줄 등록)
 keyManager.initialize();
 
 // ============================================

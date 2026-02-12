@@ -5,37 +5,36 @@ const { requireAdmin } = require('../../middleware/adminAuth');
 
 /**
  * POST /api/admin/login
- * Key 기반 로그인
+ * 패스워드 기반 로그인
  */
-router.post('/login', (req, res) => {
-  const { key } = req.body;
+router.post('/login', async (req, res) => {
+  const { password } = req.body;
 
-  // Key 검증
-  if (!key || key.length < 10) {
+  if (!password) {
     return res.status(400).json({
       success: false,
-      error: 'InvalidKey',
-      message: 'Key는 10자 이상이어야 합니다.'
+      error: 'InvalidPassword',
+      message: '패스워드를 입력해주세요.'
     });
   }
 
-  if (!keyManager.verifyKey(key)) {
+  const isValid = await keyManager.verifyPassword(password);
+
+  if (!isValid) {
     return res.status(401).json({
       success: false,
-      error: 'WrongKey',
-      message: '잘못된 Key입니다.'
+      error: 'WrongPassword',
+      message: '잘못된 패스워드입니다.'
     });
   }
 
   // 세션에 관리자 정보 저장
   req.session.isAdmin = true;
-  req.session.keyVersion = keyManager.getKeyVersion();
   req.session.loginAt = new Date().toISOString();
 
   res.json({
     success: true,
-    message: '로그인 성공',
-    keyInfo: keyManager.getKeyInfo()
+    message: '로그인 성공'
   });
 });
 
@@ -72,47 +71,11 @@ router.get('/session', (req, res) => {
     });
   }
 
-  // Key 버전 확인
-  if (req.session.keyVersion !== keyManager.getKeyVersion()) {
-    req.session.destroy();
-    return res.json({
-      success: true,
-      isLoggedIn: false,
-      reason: 'key_rotated'
-    });
-  }
-
   res.json({
     success: true,
     isLoggedIn: true,
-    loginAt: req.session.loginAt,
-    keyInfo: keyManager.getKeyInfo()
+    loginAt: req.session.loginAt
   });
-});
-
-/**
- * POST /api/admin/rotate-key
- * 수동 Key 갱신 (긴급용, 관리자 전용)
- */
-router.post('/rotate-key', requireAdmin, async (req, res) => {
-  try {
-    const newKey = await keyManager.forceRotate();
-
-    // 현재 세션도 무효화
-    req.session.destroy();
-
-    res.json({
-      success: true,
-      message: 'Key가 갱신되었습니다. 이메일을 확인해주세요.',
-      // 보안상 새 Key는 응답에 포함하지 않음
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      error: 'RotateFailed',
-      message: 'Key 갱신 중 오류가 발생했습니다.'
-    });
-  }
 });
 
 module.exports = router;

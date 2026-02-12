@@ -30,9 +30,6 @@ yarn-error.log*
 # Server config
 /server/config/dev.js
 
-# Admin key file (auto-generated)
-.admin-key
-
 # Uploads (keep directory structure)
 /uploads
 

@@ -20,7 +20,6 @@ const { Header, Sider, Content } = Layout;
 export default function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [keyInfo, setKeyInfo] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -40,8 +39,6 @@ export default function AdminLayout() {
         navigate('/admin/login');
         return;
       }
-
-      setKeyInfo(data.keyInfo);
     } catch (err) {
       console.error('Session check failed:', err);
       navigate('/admin/login');
@@ -168,11 +165,6 @@ export default function AdminLayout() {
           />
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            {keyInfo && (
-              <span style={{ color: '#888', fontSize: 12 }}>
-                Key expires: {new Date(keyInfo.expiresAt).toLocaleDateString('ko-KR')}
-              </span>
-            )}
             <Button
               type="text"
               icon={<LogoutOutlined />}
