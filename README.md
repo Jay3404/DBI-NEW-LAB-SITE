@@ -13,8 +13,7 @@
 | **Frontend** | React + Vite + Ant Design | React 19, Vite 7, Antd 5 |
 | **Backend** | Node.js + Express | Node 22, Express 5 |
 | **Database** | MongoDB + Mongoose | Mongoose 8 |
-| **Auth** | Session-based Key Authentication | Quarterly Auto-rotation |
-| **Email** | Nodemailer (SMTP) | - |
+| **Auth** | Session-based Password Authentication | bcrypt |
 
 ---
 
@@ -55,8 +54,7 @@ DBI-NEW-LAB-SITE/
 │
 ├── server/                      # Backend (Express)
 │   ├── lib/                     # Utilities
-│   │   ├── emailService.js      # Email Sending (Key Rotation, Alerts)
-│   │   ├── keyManager.js        # Admin Key Management
+│   │   ├── keyManager.js        # Admin Password Authentication
 │   │   └── upload.js            # File Upload (Multer, Dynamic Path)
 │   ├── middleware/
 │   │   └── adminAuth.js         # Admin Authentication Middleware
@@ -68,7 +66,7 @@ DBI-NEW-LAB-SITE/
 │   │   └── Publication.js
 │   ├── routes/                  # API Routes
 │   │   ├── admin/
-│   │   │   ├── auth.js          # Login, Logout, Session, Key Rotation
+│   │   │   ├── auth.js          # Login, Logout, Session
 │   │   │   └── settings.js      # Settings API
 │   │   ├── courses.js
 │   │   ├── members.js
@@ -85,8 +83,6 @@ DBI-NEW-LAB-SITE/
 │
 ├── .env                         # Environment Variables (DO NOT COMMIT)
 ├── .env.example                 # Environment Template
-├── .admin-key                   # Admin Key Storage (Auto-generated)
-├── .site-settings.json          # Site Settings (Email Config)
 └── package.json                 # Root Package
 ```
 
@@ -209,26 +205,14 @@ nano .env  # 또는 vim .env
 MONGO_URI=mongodb://localhost:27017/dbi-lab
 
 # ============================================
+# Admin 패스워드 (배포 시 수동 설정)
+# ============================================
+ADMIN_PASSWORD=your-admin-password-here
+
+# ============================================
 # 세션 설정
 # ============================================
 SESSION_SECRET=your-very-secure-random-string-here
-
-# ============================================
-# 이메일 설정 (SMTP)
-# Gmail 사용 시: 앱 비밀번호 필요
-# https://myaccount.google.com/apppasswords
-# ============================================
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-16-char-app-password
-
-# ============================================
-# 알림 수신자 이메일
-# Key 갱신 시 이 주소로 새 Key 발송
-# ============================================
-PROFESSOR_EMAIL=professor@hanyang.ac.kr
-ADMIN_EMAIL=labmanager@hanyang.ac.kr
 
 # ============================================
 # 서버 설정
@@ -279,17 +263,7 @@ npm run dev
 
 ### Step 7: Admin 최초 로그인
 
-서버 첫 실행 시 Admin Key가 자동 생성됩니다.
-
-```bash
-# 콘솔에서 확인
-새 Admin Key 생성됨 (콘솔에서 확인하세요): xK9mP2nL4qRs
-
-# 또는 파일에서 확인
-cat .admin-key
-```
-
-이 Key로 `/admin` 페이지에서 로그인합니다.
+`.env` 파일에 설정한 `ADMIN_PASSWORD`로 `/admin` 페이지에서 로그인합니다.
 
 ---
 
@@ -315,7 +289,7 @@ cat .admin-key
 
 | Page | Route | Description |
 |------|-------|-------------|
-| **Login** | `/admin/login` | Key 기반 로그인 |
+| **Login** | `/admin/login` | 패스워드 기반 로그인 |
 | **Dashboard** | `/admin` | 대시보드 - 콘텐츠 통계, 시스템 상태 |
 | **Courses** | `/admin/courses` | 강의 CRUD + 이미지 업로드 |
 | **Publications** | `/admin/publications` | 논문 CRUD (Type, Category, Selected 등 필터) |
@@ -328,20 +302,7 @@ cat .admin-key
 
 | Feature | Description |
 |---------|-------------|
-| **Key 정보 표시** | 현재 Key 버전, 분기(Q1~Q4), 만료일 표시 |
-| **Key 수동 갱신** | 긴급 시 즉시 갱신 (확인 후 새 Key 이메일 발송, 세션 종료) |
-| **이메일 설정** | 교수님/관리자 알림 이메일 주소 변경 |
-| **테스트 이메일** | 설정 확인용 테스트 이메일 발송 |
 | **로그아웃** | 세션 종료 |
-
-### Key Auto-Rotation 시스템
-
-Admin Key는 분기별로 자동 갱신됩니다:
-- **갱신일**: 1월 1일, 4월 1일, 7월 1일, 10월 1일 (오전 9시)
-- **새 Key**: 12자리 랜덤 문자열 (영문+숫자)
-- **알림**: 설정된 이메일로 새 Key 자동 발송
-- **세션**: 갱신 시 기존 세션 자동 무효화
-- **저장**: `.admin-key` 파일에 버전 정보와 함께 저장
 
 ### File Upload 시스템
 
@@ -385,15 +346,12 @@ GET /api/health                 # 서버 상태 (MongoDB 연결 상태 포함)
 
 ```
 # 인증
-POST /api/admin/login           # Key 로그인
+POST /api/admin/login           # 패스워드 로그인
 POST /api/admin/logout          # 로그아웃
 GET  /api/admin/session         # 세션 상태 확인
-POST /api/admin/rotate-key      # Key 수동 갱신
 
 # 설정
 GET  /api/admin/settings        # 설정 조회
-PUT  /api/admin/settings/email  # 이메일 설정 수정
-POST /api/admin/settings/test-email  # 테스트 이메일 발송
 
 # CRUD (모든 리소스 동일 패턴)
 POST   /api/{resource}          # 생성
@@ -571,16 +529,13 @@ sudo tail -f /var/log/mongodb/mongod.log
 
 3. 파일 크기: 5MB 이하인지 확인
 
-### Admin Key 분실
+### Admin 패스워드 변경
+
+`.env` 파일의 `ADMIN_PASSWORD` 값을 변경한 후 서버를 재시작합니다.
 
 ```bash
-# 파일에서 확인
-cat .admin-key
-
-# 또는 새로 생성
-rm .admin-key
-npm run start
-# 콘솔에서 새 Key 확인
+# .env 수정 후
+pm2 restart dbi-lab
 ```
 
 ### Port Already in Use
@@ -603,9 +558,8 @@ kill -9 <PID>
 | **1.0.0** | 2025-01 | Initial Release |
 | | | - Public Pages: Home, Research, Publications, Members, Professor, Researchers, Students, Projects, Courses, News |
 | | | - Admin Panel: Dashboard, CRUD for all resources |
-| | | - Quarterly Auto-rotating Admin Key |
-| | | - Email Notification System |
-| | | - Settings Page (Key Info, Email Config, Logout) |
+| | | - Password-based Admin Authentication |
+| | | - Settings Page (Logout) |
 | | | - Dynamic File Upload (Courses, Members) |
 | | | - Table Layout for Courses Page |
 

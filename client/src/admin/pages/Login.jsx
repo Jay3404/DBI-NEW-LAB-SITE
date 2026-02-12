@@ -11,11 +11,6 @@ export default function AdminLogin() {
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
-    if (values.key.length < 10) {
-      message.error('Key는 10자 이상이어야 합니다.');
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -23,7 +18,7 @@ export default function AdminLogin() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ key: values.key })
+        body: JSON.stringify({ password: values.password })
       });
 
       const data = await res.json();
@@ -71,7 +66,7 @@ export default function AdminLogin() {
             <LockOutlined style={{ fontSize: 28, color: 'white' }} />
           </div>
           <Title level={3} style={{ marginBottom: 8 }}>DBI Lab Admin</Title>
-          <Text type="secondary">Access Key를 입력하세요</Text>
+          <Text type="secondary">관리자 패스워드를 입력하세요</Text>
         </div>
 
         <Form
@@ -80,15 +75,14 @@ export default function AdminLogin() {
           size="large"
         >
           <Form.Item
-            name="key"
+            name="password"
             rules={[
-              { required: true, message: 'Key를 입력해주세요' },
-              { min: 10, message: '10자 이상 입력해주세요' }
+              { required: true, message: '패스워드를 입력해주세요' }
             ]}
           >
             <Input.Password
               prefix={<LockOutlined />}
-              placeholder="Access Key (10자 이상)"
+              placeholder="Password"
               autoFocus
             />
           </Form.Item>
@@ -105,12 +99,6 @@ export default function AdminLogin() {
             </Button>
           </Form.Item>
         </Form>
-
-        <div style={{ textAlign: 'center' }}>
-          <Text type="secondary" style={{ fontSize: 12 }}>
-            Key는 분기별로 갱신되어 이메일로 발송됩니다.
-          </Text>
-        </div>
       </Card>
     </div>
   );
