@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import HeroSection from '../components/HeroSection'
 import { Carousel } from 'antd'
+import { API_CONFIG } from '../config/api'
 
 import CarouselImg1 from '../assets/CarouselImg1.png'
 import CarouselImg2 from '../assets/CarouselImg2.png'
@@ -32,22 +33,21 @@ export default function Home() {
     })
   }
 
-  useEffect(() => {
-    // news.json에서 데이터를 가져와서 최신순으로 정렬하고 최근 6개만 선택
-    const fetchNewsData = async () => {
-      try {
-        const response = await import('../data/news.json');
-        const sortedNews = response.default
-          .sort((a, b) => new Date(b.date) - new Date(a.date))
-          .slice(0, 6);
-        setNewsData(sortedNews);
-      } catch (error) {
-        console.error('Failed to load news data:', error);
+  const fetchNewsData = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/api/news?limit=6`);
+      const data = await res.json();
+      if (data.success) {
+        setNewsData(data.data);
       }
-    };
-
-    fetchNewsData();
+    } catch {
+      console.error('Failed to load news data');
+    }
   }, []);
+
+  useEffect(() => {
+    fetchNewsData();
+  }, [fetchNewsData]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -109,9 +109,9 @@ export default function Home() {
           </div>
           <div className="home-news-divider"></div>
           <div className="home-news-list">
-            {newsData.map((news, index) => (
-              <div 
-                key={news.id} 
+            {newsData.map((news) => (
+              <div
+                key={news._id}
                 className="home-news-item"
                 onClick={handleNewsClick}
                 style={{ cursor: 'pointer' }}
