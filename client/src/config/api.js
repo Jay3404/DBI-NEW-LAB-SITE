@@ -1,7 +1,7 @@
 // API 설정 및 엔드포인트 관리
 export const API_CONFIG = {
   // 기본 API URL (환경변수로 관리 가능)
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001',
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || '',
 
   // 관리자 인증 API
   ADMIN: {
