@@ -10,7 +10,7 @@ const ensureDir = (dir) => {
 };
 
 // 기본 업로드 디렉토리들 생성
-const uploadsBase = path.join(__dirname, '../../uploads');
+const uploadsBase = process.env.UPLOAD_ROOT || '/var/www/uploads';
 const coursesDir = path.join(uploadsBase, 'courses');
 const membersDir = path.join(uploadsBase, 'members');
 
@@ -36,7 +36,13 @@ const storage = multer.diskStorage({
     // 파일명: prefix_타임스탬프_랜덤.확장자
     const timestamp = Date.now();
     const random = Math.random().toString(36).substring(2, 8);
-    const ext = path.extname(file.originalname).toLowerCase();
+    const mimeToExt = {
+      'image/jpeg': '.jpg',
+      'image/png': '.png',
+      'image/webp': '.webp',
+      'image/gif': '.gif'
+    };
+    const ext = mimeToExt[file.mimetype] || path.extname(file.originalname).toLowerCase() || '.bin';
 
     // URL에 따라 prefix 결정
     let prefix = 'file';

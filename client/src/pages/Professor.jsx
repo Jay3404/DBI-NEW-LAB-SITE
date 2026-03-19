@@ -153,80 +153,17 @@ export default function Professor() {
         <div className="details-section">
           <div className="details-content">
             <div className="details-text">
-              {details.professionalExperience && (
-                <>
-                  <p><strong>Professional Experience</strong></p>
-                  <div style={{ marginLeft: '20px' }}>
-                    {details.professionalExperience.map((exp, idx) => (
-                      <p key={idx}>• {renderTextWithLinks(exp)}</p>
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {details.affiliations && (
-                <>
-                  <p><strong>Affiliations</strong></p>
-                  <div style={{ marginLeft: '20px' }}>
-                    {details.affiliations.map((aff, idx) => (
-                      <p key={idx}>• {renderTextWithLinks(aff)}</p>
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {(details.professionalExperience || details.affiliations) && (
-                <p style={{ marginLeft: '20px' }}>
-                  <em>*For a more detailed career history, visit my LinkedIn profile.</em>
-                </p>
-              )}
-
-              {details.evaluationRoles && (
-                <>
-                  <p><strong>Evaluation & Advisory Roles</strong></p>
-                  <div style={{ marginLeft: '20px' }}>
-                    {details.evaluationRoles.map((role, idx) => (
-                      <p key={idx}>• {role}</p>
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {details.academicService && (
-                <>
-                  <p><strong>Academic & Professional Service</strong></p>
-                  <div style={{ marginLeft: '20px' }}>
-                    {details.academicService.map((service, idx) => (
-                      <p key={idx}>• {service}</p>
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {details.editorialService && (
-                <>
-                  <p><strong>Editorial & Journal Review Service</strong></p>
-                  <div style={{ marginLeft: '20px' }}>
-                    <p>• Ad-hoc Reviewer for journals published by:</p>
+                {Object.entries(details).map(([title, items]) =>
+                Array.isArray(items) && items.length > 0 && (
+                  <div key={title}>
+                    <p><strong>{title}</strong></p>
                     <div style={{ marginLeft: '20px' }}>
-                      {details.editorialService.map((service, idx) => (
-                        <p key={idx}>• {service}</p>
+                      {items.map((item, idx) => (
+                        <p key={idx}>• {renderTextWithLinks(item)}</p>
                       ))}
                     </div>
-                    <p><em>*A complete list of journals and reviewer activities can be found on my ORCID profile.</em></p>
                   </div>
-                </>
-              )}
-
-              {details.awards && (
-                <>
-                  <p><strong>Awards & Honors</strong></p>
-                  <div style={{ marginLeft: '20px' }}>
-                    {details.awards.map((award, idx) => (
-                      <p key={idx}>• {award}</p>
-                    ))}
-                  </div>
-                </>
+                )
               )}
             </div>
           </div>
