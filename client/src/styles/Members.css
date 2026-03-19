@@ -456,3 +456,249 @@
 .details-content::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
+/* Alumni Page Styles - INC Lab Style */
+.alumni-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.alumni-category-section {
+  margin-bottom: 60px;
+}
+
+.alumni-year-group {
+  margin-bottom: 40px;
+}
+
+.alumni-year-title {
+  color: #333;
+  font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  margin-bottom: 25px;
+  padding-left: 15px;
+  border-left: 4px solid #0E4A84;
+}
+
+.alumni-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  justify-items: center;
+}
+
+/* INC Lab 스타일: 수직 카드 (이미지 위, 텍스트 아래) */
+.alumni-card {
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.alumni-card:hover {
+  transform: translateY(-5px);
+}
+
+.alumni-image-container {
+  margin-bottom: 20px;
+}
+
+.alumni-image {
+  width: 210px;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.alumni-info {
+  text-align: center;
+}
+
+.alumni-name {
+  color: #212121;
+  font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.alumni-role {
+  color: #0E4A84;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+}
+
+.alumni-position {
+  color: #333;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  margin: 0 0 8px 0;
+}
+
+.alumni-email {
+  color: #666;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* Alumni Responsive Design */
+@media (max-width: 1200px) {
+  .alumni-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 35px;
+  }
+}
+
+@media (max-width: 768px) {
+  .alumni-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .alumni-card {
+    max-width: 100%;
+  }
+
+  .alumni-image {
+    width: 180px;
+    height: 240px;
+  }
+}
+
+@media (max-width: 600px) {
+  .alumni-year-title {
+    font-size: 18px;
+  }
+
+  .alumni-name {
+    font-size: 18px;
+  }
+
+  .alumni-role,
+  .alumni-position,
+  .alumni-email {
+    font-size: 14px;
+  }
+
+  .alumni-image {
+    width: 160px;
+    height: 210px;
+  }
+}
+
+/* Alumni Horizontal Layout - INC Lab Style */
+.alumni-horizontal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+.alumni-horizontal-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  padding: 30px 40px;
+  transition: all 0.3s ease;
+}
+
+.alumni-horizontal-card.even {
+  background-color: #f8f9fa;
+}
+
+.alumni-horizontal-card.odd {
+  background-color: #ffffff;
+}
+
+.alumni-horizontal-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alumni-horizontal-image {
+  flex-shrink: 0;
+}
+
+.alumni-image-horizontal {
+  width: 180px;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alumni-horizontal-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.alumni-horizontal-name {
+  color: #212121;
+  font-size: 22px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  line-height: 1.4;
+}
+
+.alumni-detail {
+  color: #333;
+  font-size: 15px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.alumni-detail strong {
+  color: #212121;
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+/* Responsive - Horizontal Layout */
+@media (max-width: 768px) {
+  .alumni-horizontal-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 25px 20px;
+  }
+
+  .alumni-horizontal-info {
+    width: 100%;
+  }
+
+  .alumni-image-horizontal {
+    width: 160px;
+    height: 210px;
+  }
+}
+
+@media (max-width: 600px) {
+  .alumni-horizontal-card {
+    padding: 20px 15px;
+    gap: 20px;
+  }
+
+  .alumni-horizontal-name {
+    font-size: 20px;
+  }
+
+  .alumni-detail {
+    font-size: 14px;
+  }
+
+  .alumni-image-horizontal {
+    width: 140px;
+    height: 185px;
+  }
+}

@@ -140,8 +140,8 @@ export default function Header() {
         </div>
         
         <div className="nav-dropdown" ref={membersDropdownRef}>
-          <button 
-            className={`nav-link dropdown-toggle ${isActive('/members') ? 'active' : ''}`}
+          <button
+            className={`nav-link dropdown-toggle ${isActive('/professor') || isActive('/researchers') || isActive('/students') || isActive('/alumni') ? 'active' : ''}`}
             onClick={handleMembersClick}
             type="button"
           >
@@ -170,8 +170,8 @@ export default function Header() {
               >
                 Researchers
               </Link>
-              <Link 
-                to="/students" 
+              <Link
+                to="/students"
                 className="dropdown-item"
                 onClick={() => {
                   closeMembersMenu()
@@ -180,11 +180,21 @@ export default function Header() {
               >
                 Students
               </Link>
+              <Link
+                to="/alumni"
+                className="dropdown-item"
+                onClick={() => {
+                  closeMembersMenu()
+                  scrollToTop()
+                }}
+              >
+                Alumni
+              </Link>
             </div>
           )}
         </div>
-        
-        <Link 
+
+        <Link
           to="/projects" 
           className={`nav-link ${isActive('/projects') ? 'active' : ''}`}
           onClick={scrollToTop}
@@ -286,8 +296,8 @@ export default function Header() {
                 >
                   Researchers
                 </Link>
-                <Link 
-                  to="/students" 
+                <Link
+                  to="/students"
                   className="mobile-nav-link"
                   onClick={() => {
                     closeMobileMenu()
@@ -296,9 +306,19 @@ export default function Header() {
                 >
                   Students
                 </Link>
+                <Link
+                  to="/alumni"
+                  className="mobile-nav-link"
+                  onClick={() => {
+                    closeMobileMenu()
+                    scrollToTop()
+                  }}
+                >
+                  Alumni
+                </Link>
               </div>
-              
-              <Link 
+
+              <Link
                 to="/projects" 
                 className={`mobile-nav-link ${isActive('/projects') ? 'active' : ''}`}
                 onClick={() => {

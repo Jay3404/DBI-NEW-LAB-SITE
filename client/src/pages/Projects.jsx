@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { Spin, message } from 'antd';
+import { API_CONFIG } from '../config/api';
 import '../styles/Projects.css';
 
 export default function Projects() {
   const [activeTab, setActiveTab] = useState('current');
+  const [projects, setProjects] = useState({ current: [], workInProgress: [], past: [] });
+  const [loading, setLoading] = useState(true);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -14,97 +18,33 @@ export default function Projects() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const projectsData = {
-    current: [
-      {
-        project: 'Deep learning-based traffic congestion prediction model for intelligent transportation system optimization',
-        support: 'Hanyang University',
-        date: '2025 - 2026'
-      },
-      {
-        project: 'Product data construction',
-        support: 'CRK',
-        date: '2025 - 2026'
-      },
-      {
-        project: 'LLM data validation',
-        support: 'TTA - WesleyQuest',
-        date: '2025 - 2026'
-      },
-      {
-        project: 'Advancing and integrating AI-driven vision recognition systems',
-        support: 'CRK',
-        date: '2025 - 2026'
-      },
-      {
-        project: 'Vision AI-based track recognition and hazardous zone classification',
-        support: 'Hyundai Rotem - D&D',
-        date: '2025 - 2026'
-      },
-      {
-        project: 'AI-based speech recognition system to assist communication in neurological disorders',
-        support: 'Hanyang University',
-        date: '2025 - 2026'
-      },
-      {
-        project: 'Academic research on pseudonymized credit and financial data',
-        support: 'KCB',
-        date: '2025 - 2028'
-      },
-    ],
-    workInProgress: [
-      {
-        project: 'Technology transfer for method and system for secure money transfer authentication based on question answering',
-        support: '-',
-        date: 'Contract in Progress'
-      },
-      {
-        project: 'Development of a novel deep learning algorithm leveraging inspiratory system and validation using heterogeneous data',
-        support: '-',
-        date: 'Submitted'
-      }
-    ],
-    past: [
-      {
-        project: 'Research on innovative energy-fusion technology for future mobility transition',
-        support: 'Hanyang University',
-        date: '2025'
-      },
-      {
-        project: 'Preliminary research on driver advisory systems and related technologies',
-        support: 'KORAIL - D&D',
-        date: '2025'
-      },
-      {
-        project: 'AI-based exercise prescription framework to optimize healthcare services',
-        support: 'Hanyang University',
-        date: '2024 - 2025'
-      },
-      {
-        project: 'Intelligent systems and information technology-based convergence research for solving detailed business problems within heterogeneous industries',
-        support: 'Hanyang University',
-        date: '2024 - 2025'
-      },
-      {
-        project: 'Assessment of regional lung function and particle inhalation characteristics during inhaler use in patients with COPD and asthma using quantitative CT and computational fluid dynamics',
-        support: 'MSIT',
-        date: '2021 - 2024'
-      },
-      {
-        project: 'Development of personal information protection technology using anonymization techniques in a big data environment',
-        support: 'MSIT',
-        date: '2017 - 2018'
-      },
-      {
-        project: 'Public big data-based standard analysis model - local tax sector',
-        support: 'MOIS',
-        date: '2017 - 2018'
-      }
-    ]
-  };
+  const fetchProjects = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_CONFIG.BASE_URL}/api/projects`);
+      const data = await res.json();
 
-  const renderProjectsTable = (projects) => {
-    if (projects.length === 0) {
+      if (data.success) {
+        const grouped = {
+          current: data.data.filter(p => p.status === 'Ongoing'),
+          workInProgress: data.data.filter(p => p.status === 'Work In Progress'),
+          past: data.data.filter(p => p.status === 'Completed')
+        };
+        setProjects(grouped);
+      }
+    } catch (err) {
+      message.error('Failed to load projects');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
+  const renderProjectsTable = (projectList) => {
+    if (projectList.length === 0) {
       return (
         <div className="no-projects">
           <p>No projects available for this category.</p>
@@ -112,7 +52,6 @@ export default function Projects() {
       );
     }
 
-    // 480px 이하: project만 표시
     if (screenWidth <= 480) {
       return (
         <div className="projects-table projects-table-mobile">
@@ -120,9 +59,9 @@ export default function Projects() {
             <div className="header-cell project-header">Project</div>
           </div>
           <div className="table-body">
-            {projects.map((project, index) => (
-              <div key={index} className="table-row">
-                <div className="table-cell project-cell">{project.project}</div>
+            {projectList.map((project, index) => (
+              <div key={project._id || index} className="table-row">
+                <div className="table-cell project-cell">{project.title}</div>
               </div>
             ))}
           </div>
@@ -130,7 +69,6 @@ export default function Projects() {
       );
     }
 
-    // 768px 이하: project와 support만 표시
     if (screenWidth <= 768) {
       return (
         <div className="projects-table projects-table-tablet">
@@ -139,10 +77,10 @@ export default function Projects() {
             <div className="header-cell support-header">Support</div>
           </div>
           <div className="table-body">
-            {projects.map((project, index) => (
-              <div key={index} className="table-row">
-                <div className="table-cell project-cell">{project.project}</div>
-                <div className="table-cell support-cell">{project.support}</div>
+            {projectList.map((project, index) => (
+              <div key={project._id || index} className="table-row">
+                <div className="table-cell project-cell">{project.title}</div>
+                <div className="table-cell support-cell">{project.sponsor || '-'}</div>
               </div>
             ))}
           </div>
@@ -150,7 +88,6 @@ export default function Projects() {
       );
     }
 
-    // 768px 이상: 모든 컬럼 표시
     return (
       <div className="projects-table projects-table-desktop">
         <div className="table-header">
@@ -159,11 +96,11 @@ export default function Projects() {
           <div className="header-cell date-header">Date</div>
         </div>
         <div className="table-body">
-          {projects.map((project, index) => (
-            <div key={index} className="table-row">
-              <div className="table-cell project-cell">{project.project}</div>
-              <div className="table-cell support-cell">{project.support}</div>
-              <div className="table-cell date-cell">{project.date}</div>
+          {projectList.map((project, index) => (
+            <div key={project._id || index} className="table-row">
+              <div className="table-cell project-cell">{project.title}</div>
+              <div className="table-cell support-cell">{project.sponsor || '-'}</div>
+              <div className="table-cell date-cell">{project.period || '-'}</div>
             </div>
           ))}
         </div>
@@ -171,14 +108,25 @@ export default function Projects() {
     );
   };
 
+  if (loading) {
+    return (
+      <div className="projects-container">
+        <div className="projects-header">
+          <h1 className="projects-title">Projects</h1>
+        </div>
+        <div style={{ textAlign: 'center', padding: 50 }}>
+          <Spin size="large" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="projects-container">
-      {/* Header Section */}
       <div className="projects-header">
         <h1 className="projects-title">Projects</h1>
       </div>
 
-      {/* Tabs Section */}
       <div className="tabs-container">
         <button
           className={`tab-button ${activeTab === 'current' ? 'active' : ''}`}
@@ -200,9 +148,8 @@ export default function Projects() {
         </button>
       </div>
 
-      {/* Content Section */}
       <div className="projects-content">
-        {renderProjectsTable(projectsData[activeTab])}
+        {renderProjectsTable(projects[activeTab])}
       </div>
     </div>
   );

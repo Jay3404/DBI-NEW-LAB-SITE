@@ -1,4 +1,0 @@
-[
-    { "id": "pi-1", "name": "Prof. ABC", "role": "PI", "email": "pi@lab.ac.kr" },
-    { "id": "phd-1", "name": "Student One", "role": "PhD", "email": "s1@lab.ac.kr" }
-  ]  
