@@ -141,7 +141,7 @@ export default function Courses() {
             {hasCoursesInGrad(data, 'Undergraduate') && (
               <div className="table-row">
                 <div className="table-cell grad-label-cell">
-                  <div className="grad-label">Under<br/>graduated</div>
+                  <div className="grad-label">Under<br/>Graduate</div>
                 </div>
                 <div className="table-cell courses-cell">
                   <div className="courses-cell-content">
@@ -172,7 +172,7 @@ export default function Courses() {
             {hasCoursesInGrad(data, 'Graduate') && (
               <div className="table-row">
                 <div className="table-cell grad-label-cell">
-                  <div className="grad-label">Graduated</div>
+                  <div className="grad-label">Graduate</div>
                 </div>
                 <div className="table-cell courses-cell">
                   <div className="courses-cell-content">
