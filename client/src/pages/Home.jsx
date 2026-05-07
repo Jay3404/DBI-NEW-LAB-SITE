@@ -1,37 +1,49 @@
-import { useState, useEffect, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
-import HeroSection from '../components/HeroSection'
-import { Carousel } from 'antd'
-import { API_CONFIG } from '../config/api'
+import { Carousel } from "antd";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import HeroSection from "../components/HeroSection";
+import { API_CONFIG } from "../config/api";
 
-import CarouselImg1 from '../assets/CarouselImg1.png'
-import CarouselImg2 from '../assets/CarouselImg2.png'
-import CarouselImg3 from '../assets/CarouselImg3.png'
-import CarouselImg4 from '../assets/CarouselImg4.png'
-import CarouselImg5 from '../assets/CarouselImg5.png'
-import CarouselImg6 from '../assets/CarouselImg6.png'
-import CarouselImg7 from '../assets/CarouselImg7.png'
-import '../styles/Home.css'
+import "../styles/Home.css";
+
+const carouselImages = Object.entries(
+  import.meta.glob("../assets/main_imgs/CarouselImg*.png", {
+    eager: true,
+    import: "default",
+  }),
+)
+  .map(([path, src]) => {
+    const fileName =
+      path.match(/CarouselImg\d+\.png$/)?.[0] ?? "Carousel image";
+    const order = Number(path.match(/CarouselImg(\d+)\.png$/)?.[1] ?? 0);
+
+    return {
+      alt: fileName.replace(".png", ""),
+      order,
+      src,
+    };
+  })
+  .sort((a, b) => a.order - b.order);
 
 export default function Home() {
   const navigate = useNavigate();
-  const autoplaySpeed = 1500
+  const autoplaySpeed = 3000;
   const [newsData, setNewsData] = useState([]);
 
   const imageStyle = {
-    height: '280px', // 고정 높이로 설정
-    width: '100%',
-    objectFit: 'cover',
-    borderRadius: '8px', // 이미지 자체에만 테두리 둥글기 적용
+    height: "280px", // 고정 높이로 설정
+    width: "100%",
+    objectFit: "contain",
+    borderRadius: "8px", // 이미지 자체에만 테두리 둥글기 적용
   };
 
   // 페이지 이동 시 스크롤을 최상단으로 올리는 함수 (Header와 동일)
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
-    })
-  }
+      behavior: "smooth",
+    });
+  };
 
   const fetchNewsData = useCallback(async () => {
     try {
@@ -41,7 +53,7 @@ export default function Home() {
         setNewsData(data.data);
       }
     } catch {
-      console.error('Failed to load news data');
+      console.error("Failed to load news data");
     }
   }, []);
 
@@ -51,13 +63,15 @@ export default function Home() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+    const month = date
+      .toLocaleString("en-US", { month: "short" })
+      .toUpperCase();
     const year = date.getFullYear();
     return `${month} ${year}`;
   };
 
   const handleNewsClick = () => {
-    navigate('/news');
+    navigate("/news");
     // Header의 News 네비게이션과 동일하게 맨 위로 스크롤
     scrollToTop();
   };
@@ -70,34 +84,19 @@ export default function Home() {
       {/* Main Content - carousel과 news를 직접 배치 */}
       <div className="content-sections">
         {/* Carousel - 좌측 */}
-        <Carousel 
-          autoplay={{ dotDuration: true }} 
+        <Carousel
+          autoplay={{ dotDuration: true }}
           autoplaySpeed={autoplaySpeed}
-          dots={{ position: 'bottom' }}
+          arrows
+          dots={false}
           effect="fade"
           className="carousel-component"
         >
-          <div>
-            <img src={CarouselImg1} alt="CarouselImg1" style={imageStyle} />
-          </div>
-          <div>
-            <img src={CarouselImg2} alt="CarouselImg2" style={imageStyle} />
-          </div>
-          <div>
-            <img src={CarouselImg3} alt="CarouselImg3" style={imageStyle} />
-          </div>
-          <div>
-            <img src={CarouselImg4} alt="CarouselImg4" style={imageStyle} />
-          </div>
-          <div>
-            <img src={CarouselImg5} alt="CarouselImg5" style={imageStyle} />
-          </div>
-          <div>
-            <img src={CarouselImg6} alt="CarouselImg6" style={imageStyle} />
-          </div>
-          <div>
-            <img src={CarouselImg7} alt="CarouselImg7" style={imageStyle} />
-          </div>
+          {carouselImages.map((image) => (
+            <div key={image.alt}>
+              <img src={image.src} alt={image.alt} style={imageStyle} />
+            </div>
+          ))}
         </Carousel>
 
         {/* News Section - 우측 */}
@@ -114,7 +113,7 @@ export default function Home() {
                 key={news._id}
                 className="home-news-item"
                 onClick={handleNewsClick}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
               >
                 <span className="home-news-title-text">{news.title}</span>
                 <span className="home-news-date">{formatDate(news.date)}</span>
@@ -124,5 +123,5 @@ export default function Home() {
         </div>
       </div>
     </>
-  )
-}  
+  );
+}
