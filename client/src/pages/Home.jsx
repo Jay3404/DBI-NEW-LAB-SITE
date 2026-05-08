@@ -27,7 +27,7 @@ const carouselImages = Object.entries(
 
 export default function Home() {
   const navigate = useNavigate();
-  const autoplaySpeed = 3000;
+  const autoplaySpeed = 3500;
   const [newsData, setNewsData] = useState([]);
 
   const imageStyle = {

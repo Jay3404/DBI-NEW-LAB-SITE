@@ -1,18 +1,50 @@
+import { useEffect, useState } from "react";
 import { Carousel } from "antd";
 import RESEARCH_IMAGE from "../assets/RESEARCH_IMAGE_1.png";
 import RESEARCH_IMAGE_2 from "../assets/RESEARCH_IMAGE_2.jpg";
-import "../styles/Home.css";
 import "../styles/Research.css";
+
+const researchSlides = [
+  {
+    src: RESEARCH_IMAGE,
+    alt: "Research Application Fields Diagram",
+  },
+  {
+    src: RESEARCH_IMAGE_2,
+    alt: "Data and Business Intelligence Diagram",
+  },
+];
 
 export default function Research() {
   const autoplaySpeed = 4000;
+  const [imagesReady, setImagesReady] = useState(false);
 
-  const imageStyle = {
-    maxWidth: "100%",
-    maxHeight: "100%",
-    objectFit: "contain",
-    borderRadius: "8px", // 이미지 자체에만 테두리 둥글기 적용
-  };
+  useEffect(() => {
+    let isMounted = true;
+
+    const preloadImage = (src) =>
+      new Promise((resolve) => {
+        const image = new Image();
+
+        image.onload = resolve;
+        image.onerror = resolve;
+        image.src = src;
+
+        if (image.complete) {
+          resolve();
+        }
+      });
+
+    Promise.all(researchSlides.map(({ src }) => preloadImage(src))).then(() => {
+      if (isMounted) {
+        setImagesReady(true);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <>
@@ -104,29 +136,32 @@ export default function Research() {
             </div>
 
             <div className="application-diagram">
-              <Carousel
-                autoplay={{ dotDuration: true }}
-                autoplaySpeed={autoplaySpeed}
-                arrows
-                dots={false}
-                effect="fade"
-                className="carousel-component"
-              >
-                <div>
-                  <img
-                    src={RESEARCH_IMAGE}
-                    alt="Research Application Fields Diagram"
-                    style={imageStyle}
-                  />
-                </div>
-                <div>
-                  <img
-                    src={RESEARCH_IMAGE_2}
-                    alt="Data and Business Intelligence Diagram"
-                    style={imageStyle}
-                  />
-                </div>
-              </Carousel>
+              {imagesReady ? (
+                <Carousel
+                  key="research-carousel-ready"
+                  autoplay={{ dotDuration: true }}
+                  autoplaySpeed={autoplaySpeed}
+                  arrows
+                  dots={false}
+                  effect="fade"
+                  className="research-carousel"
+                >
+                  {researchSlides.map(({ src, alt }) => (
+                    <div className="research-carousel-slide" key={alt}>
+                      <img
+                        src={src}
+                        alt={alt}
+                        className="research-carousel-image"
+                      />
+                    </div>
+                  ))}
+                </Carousel>
+              ) : (
+                <div
+                  className="research-carousel research-carousel-placeholder"
+                  aria-hidden="true"
+                />
+              )}
             </div>
           </div>
         </div>
