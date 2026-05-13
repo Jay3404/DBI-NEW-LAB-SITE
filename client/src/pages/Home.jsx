@@ -31,7 +31,7 @@ export default function Home() {
   const [newsData, setNewsData] = useState([]);
 
   const imageStyle = {
-    height: "280px", // 고정 높이로 설정
+    height: "100%",
     width: "100%",
     objectFit: "contain",
     borderRadius: "8px", // 이미지 자체에만 테두리 둥글기 적용
