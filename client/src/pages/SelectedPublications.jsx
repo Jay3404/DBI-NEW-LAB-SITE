@@ -5,12 +5,13 @@ import { API_CONFIG } from '../config/api';
 import '../styles/SelectedPublications.css';
 
 export default function SelectedPublications() {
-  const [selectedYear, setSelectedYear] = useState(2025);
+  const [selectedYear, setSelectedYear] = useState(null);
   const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [years, setYears] = useState([]);
 
   const fetchPublications = useCallback(async () => {
+    if (selectedYear === null) return;
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -45,6 +46,9 @@ export default function SelectedPublications() {
           .sort((a, b) => b - a)
           .filter(y => y > 2022);
         setYears(uniqueYears);
+	if (uniqueYears.length > 0) {
+	  setSelectedYear(prev => prev === null ? uniqueYears[0] : prev);
+	}
       }
     } catch (err) {
       console.error('Failed to fetch years');

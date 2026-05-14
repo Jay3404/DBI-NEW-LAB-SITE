@@ -50,7 +50,7 @@ app.use(session({
 }));
 
 // 정적 파일
-app.use('/uploads', express.static(path.join(process.env.UPLOAD_ROOT || '/var/www/uploads')));
+app.use('/uploads', express.static(process.env.UPLOAD_ROOT || '/var/www/dbilab/uploads'));
 
 // 요청 로깅 (개발용)
 if (process.env.NODE_ENV !== 'production') {

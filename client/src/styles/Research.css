@@ -26,7 +26,7 @@
     padding: 0 var(--space-md);
     padding-bottom: 70px;
   }
-  
+
   .section-title {
     font-size: 24px;
     margin-left: 0;
@@ -64,7 +64,7 @@
 }
 
 .research-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -173,12 +173,86 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
   margin-bottom: var(--space-2xl);
+  overflow-x: clip;
 }
 
-.application-diagram img {
-  max-width: 50%;
+.application-diagram .research-carousel {
+  width: min(100%, 900px) !important;
+  height: clamp(360px, 52vw, 520px) !important;
+  margin: 0 auto;
+  padding: 0 44px;
+  flex-shrink: 0;
+}
+
+.application-diagram .research-carousel-placeholder {
+  visibility: hidden;
+}
+
+.application-diagram .research-carousel .slick-list,
+.application-diagram .research-carousel .slick-track,
+.application-diagram .research-carousel .slick-slide,
+.application-diagram .research-carousel .slick-slide > div {
+  height: 100%;
+}
+
+.application-diagram .research-carousel-slide {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.application-diagram .research-carousel-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
   height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.application-diagram .research-carousel .slick-prev,
+.application-diagram .research-carousel .slick-next {
+  width: 32px !important;
+  height: 48px !important;
+  z-index: 2;
+  color: rgba(120, 130, 145, 0.55) !important;
+  background: transparent !important;
+  opacity: 1 !important;
+}
+
+.application-diagram .research-carousel .slick-prev {
+  inset-inline-start: 0 !important;
+}
+
+.application-diagram .research-carousel .slick-next {
+  inset-inline-end: 0 !important;
+}
+
+.application-diagram .research-carousel .slick-prev::after,
+.application-diagram .research-carousel .slick-next::after {
+  top: 50% !important;
+  inset-inline-start: 50% !important;
+  width: 16px !important;
+  height: 16px !important;
+  transform-origin: center;
+}
+
+.application-diagram .research-carousel .slick-prev::after {
+  transform: translate(-50%, -50%) rotate(-45deg) !important;
+}
+
+.application-diagram .research-carousel .slick-next::after {
+  transform: translate(-50%, -50%) rotate(135deg) !important;
+}
+
+.application-diagram .research-carousel .slick-prev:hover,
+.application-diagram .research-carousel .slick-next:hover {
+  color: rgba(90, 100, 115, 0.8) !important;
 }
 
 /* Responsive Design for Research Page */
@@ -186,11 +260,11 @@
   .research-cards {
     gap: var(--space-sm);
   }
-  
+
   .research-card {
     width: 300px;
   }
-  
+
   .section-divider {
     width: calc(300px * 4 + var(--space-sm) * 3);
   }
@@ -201,20 +275,20 @@
     justify-content: center;
     gap: var(--space-lg);
   }
-  
+
   .research-card {
     width: 320px;
   }
-  
+
   .section-divider {
     width: calc(320px * 2 + var(--space-lg) * 1);
   }
-  
+
   .application-content {
     flex-direction: column;
     gap: var(--space-2xl);
   }
-  
+
   .application-text {
     max-width: 100%;
     text-align: center;
@@ -225,24 +299,24 @@
   .container {
     padding: 0 var(--space-lg);
   }
-  
+
   .section-title {
     margin-left: 0;
     text-align: center;
   }
-  
+
   .research-cards {
     gap: var(--space-lg);
   }
-  
+
   .section-divider {
     width: 320px;
   }
-  
+
   .card-title {
     font-size: 16px;
   }
-  
+
   .card-description {
     font-size: 13px;
   }

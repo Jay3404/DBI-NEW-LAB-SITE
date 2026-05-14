@@ -153,7 +153,7 @@ export default function Professor() {
         <div className="details-section">
           <div className="details-content">
             <div className="details-text">
-                {Object.entries(details).map(([title, items]) =>
+              {Object.entries(details).map(([title, items]) =>
                 Array.isArray(items) && items.length > 0 && (
                   <div key={title}>
                     <p><strong>{title}</strong></p>
